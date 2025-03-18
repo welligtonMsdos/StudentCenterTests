@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Moq;
-using StudentCenterApi.src.Application.DTOs.Status;
 using StudentCenterApi.src.Application.DTOs.StudentCenter;
 using StudentCenterApi.src.Application.Services;
 using StudentCenterApi.src.Domain.Interfaces;
@@ -23,6 +22,39 @@ public class StudentCenterBaseTests
     }
 
     [Fact]
+    public async Task Create_sending_more_than_20_characteres_page()
+    {
+        var studentCenterBaseCreateDto = new StudentCenterBaseCreateDto 
+        { 
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.MoreThan20Charaters
+        };
+
+        var studentCenterBaseDto = new StudentCenterBaseDto 
+        {
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.MoreThan20Charaters
+        };
+
+        var studentCenterBase = new StudentCenterBase 
+        { 
+            Id = 1,
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.MoreThan20Charaters
+        };
+
+        _mapper.Setup(x => x.Map<StudentCenterBase>(studentCenterBaseCreateDto)).Returns(studentCenterBase);
+
+        _repository.Setup(x => x.Post(studentCenterBase)).ReturnsAsync(studentCenterBase);
+
+        _mapper.Setup(x => x.Map<StudentCenterBaseDto>(studentCenterBase)).Returns(studentCenterBaseDto);
+
+        var exception = await Assert.ThrowsAsync<Exception>(() => _service.Post(studentCenterBaseCreateDto));
+
+        Assert.Equal("Page can be at most 20 characters", exception.Message);
+    }
+
+    [Fact]
     public async Task Create_sending_more_than_20_characteres_description()
     {
         var studentCenterBaseCreateDto = new StudentCenterBaseCreateDto { Description = EMsg.MoreThan20Charaters };
@@ -40,6 +72,39 @@ public class StudentCenterBaseTests
         var exception = await Assert.ThrowsAsync<Exception>(() => _service.Post(studentCenterBaseCreateDto));
 
         Assert.Equal("Description can be at most 20 characters", exception.Message);
+    }
+
+    [Fact]
+    public async Task Create_sending_less_than_5_characters_page()
+    {
+        var studentCenterBaseCreateDto = new StudentCenterBaseCreateDto 
+        { 
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.LessThan5Characters
+        };
+
+        var studentCenterBaseDto = new StudentCenterBaseDto 
+        {
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.LessThan5Characters
+        };
+
+        var studentCenterBase = new StudentCenterBase 
+        { 
+            Id = 1,
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.LessThan5Characters
+        };
+
+        _mapper.Setup(x => x.Map<StudentCenterBase>(studentCenterBaseCreateDto)).Returns(studentCenterBase);
+
+        _repository.Setup(x => x.Post(studentCenterBase)).ReturnsAsync(studentCenterBase);
+
+        _mapper.Setup(x => x.Map<StudentCenterBaseDto>(studentCenterBase)).Returns(studentCenterBaseDto);
+
+        var exception = await Assert.ThrowsAsync<Exception>(() => _service.Post(studentCenterBaseCreateDto));
+
+        Assert.Equal("Page must be at least 5 characters", exception.Message);
     }
 
     [Fact]
@@ -85,11 +150,24 @@ public class StudentCenterBaseTests
     [Fact]
     public async Task Create_Valid()
     {
-        var studentCenterBaseCreateDto = new StudentCenterBaseCreateDto { Description = EMsg.ValidCharacters };
+        var studentCenterBaseCreateDto = new StudentCenterBaseCreateDto 
+        { 
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.ValidCharacters
+        };
 
-        var studentCenterBaseDto = new StudentCenterBaseDto { Description = EMsg.ValidCharacters };
+        var studentCenterBaseDto = new StudentCenterBaseDto 
+        {
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.ValidCharacters
+        };
 
-        var studentCenterBase = new StudentCenterBase { Id = 1, Description = EMsg.ValidCharacters };
+        var studentCenterBase = new StudentCenterBase 
+        { 
+            Id = 1,
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.ValidCharacters
+        };
 
         _mapper.Setup(x => x.Map<StudentCenterBase>(studentCenterBaseCreateDto)).Returns(studentCenterBase);
 
@@ -164,6 +242,40 @@ public class StudentCenterBaseTests
     }
 
     [Fact]
+    public async Task Update_sending_more_than_20_characteres_page()
+    {
+        var statusCenterBaseUpdateDto = new StudentCenterBaseUpdateDto 
+        { 
+            Id = 1, 
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.MoreThan20Charaters
+        };
+
+        var studentCenterBaseDto = new StudentCenterBaseDto 
+        {
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.MoreThan20Charaters
+        };
+
+        var studentCenterBase = new StudentCenterBase 
+        { 
+            Id = 1,
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.MoreThan20Charaters
+        };
+
+        _mapper.Setup(x => x.Map<StudentCenterBase>(statusCenterBaseUpdateDto)).Returns(studentCenterBase);
+
+        _repository.Setup(x => x.Put(studentCenterBase)).ReturnsAsync(studentCenterBase);
+
+        _mapper.Setup(x => x.Map<StudentCenterBaseDto>(studentCenterBase)).Returns(studentCenterBaseDto);
+
+        var exception = await Assert.ThrowsAsync<Exception>(() => _service.Put(statusCenterBaseUpdateDto));
+
+        Assert.Equal("Page can be at most 20 characters", exception.Message);
+    }
+
+    [Fact]
     public async Task Update_sending_more_than_20_characteres_description()
     {
         var statusCenterBaseUpdateDto = new StudentCenterBaseUpdateDto { Id = 1, Description = EMsg.MoreThan20Charaters };
@@ -181,6 +293,40 @@ public class StudentCenterBaseTests
         var exception = await Assert.ThrowsAsync<Exception>(() => _service.Put(statusCenterBaseUpdateDto));
 
         Assert.Equal("Description can be at most 20 characters", exception.Message);
+    }
+
+    [Fact]
+    public async Task Update_sending_less_than_5_characters_page()
+    {
+        var statusCenterBaseUpdateDto = new StudentCenterBaseUpdateDto 
+        { 
+            Id = 1, 
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.LessThan5Characters
+        };
+
+        var studentCenterBaseDto = new StudentCenterBaseDto 
+        {
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.LessThan5Characters
+        };
+
+        var studentCenterBase = new StudentCenterBase 
+        { 
+            Id = 1,
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.LessThan5Characters
+        };
+
+        _mapper.Setup(x => x.Map<StudentCenterBase>(statusCenterBaseUpdateDto)).Returns(studentCenterBase);
+
+        _repository.Setup(x => x.Put(studentCenterBase)).ReturnsAsync(studentCenterBase);
+
+        _mapper.Setup(x => x.Map<StudentCenterBaseDto>(studentCenterBase)).Returns(studentCenterBaseDto);
+
+        var exception = await Assert.ThrowsAsync<Exception>(() => _service.Put(statusCenterBaseUpdateDto));
+
+        Assert.Equal("Page must be at least 5 characters", exception.Message);
     }
 
     [Fact]
@@ -226,11 +372,25 @@ public class StudentCenterBaseTests
     [Fact]
     public async Task update_Valid()
     {
-        var statusCenterBaseUpdateDto = new StudentCenterBaseUpdateDto { Id = 1, Description = EMsg.ValidCharacters };
+        var statusCenterBaseUpdateDto = new StudentCenterBaseUpdateDto 
+        { 
+            Id = 1, 
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.ValidCharacters
+        };
 
-        var studentCenterBaseDto = new StudentCenterBaseDto { Description = EMsg.ValidCharacters };
+        var studentCenterBaseDto = new StudentCenterBaseDto 
+        {
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.ValidCharacters
+        };
 
-        var studentCenterBase = new StudentCenterBase { Id = 1, Description = EMsg.ValidCharacters };
+        var studentCenterBase = new StudentCenterBase
+        { 
+            Id = 1,
+            Description = EMsg.ValidCharacters,
+            Page = EMsg.ValidCharacters
+        };
 
         _mapper.Setup(x => x.Map<StudentCenterBase>(statusCenterBaseUpdateDto)).Returns(studentCenterBase);
 
